@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101327">
+<title>GameHub — Ludo & Checkers</title>
+<style>
+:root{--bg:#0c1020;--panel:#171d34;--panel2:#202844;--text:#f6f7ff;--muted:#aab3d1;--lime:#c8ff5f;--purple:#9b8cff;--line:#303958}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top right,#252453 0,transparent 42%),var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+button,input{font:inherit}button{cursor:pointer;border:0}.wrap{max-width:1100px;margin:auto;padding:22px}.nav{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-size:1.2rem;font-weight:900;letter-spacing:-.04em}.brand span{color:var(--lime)}.pill{border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:8px 13px;font-size:.82rem}
+.hero{padding:52px 0 28px;max-width:720px}.eyebrow{color:var(--lime);font-weight:800;font-size:.78rem;letter-spacing:.15em;text-transform:uppercase}.hero h1{font-size:clamp(2.3rem,7vw,4.8rem);line-height:.99;letter-spacing:-.065em;margin:13px 0 18px}.hero h1 em{color:var(--lime);font-style:normal}.hero p{color:var(--muted);font-size:1.08rem;max-width:600px}
+.games{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:22px 0}.game{background:linear-gradient(145deg,#1b2340,#14192d);border:1px solid var(--line);border-radius:24px;padding:22px;min-height:270px;display:flex;flex-direction:column;position:relative;overflow:hidden}.game:after{content:"";position:absolute;width:160px;height:160px;border-radius:50%;background:#9b8cff18;right:-50px;top:-45px}.game.ludo:after{background:#c8ff5f18}.art{font-size:3.2rem;line-height:1.2;margin:6px 0 18px}.game h2{margin:0;font-size:1.55rem}.game p{color:var(--muted);margin:6px 0 20px}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:auto}.btn{padding:11px 16px;border-radius:12px;font-weight:800;background:var(--lime);color:#151a25}.btn.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}.small{font-size:.86rem;color:var(--muted)}.section{background:#131a2e;border:1px solid var(--line);border-radius:20px;padding:20px;margin:18px 0}.section h3{margin:0 0 8px}.mode-row{display:flex;gap:10px;flex-wrap:wrap}.status{margin-top:10px;color:var(--lime);min-height:24px}.board-wrap{display:none;margin:20px 0}.board-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.board{display:grid;grid-template-columns:repeat(8,1fr);width:min(100%,520px);aspect-ratio:1;margin:18px auto;border:5px solid #3a2d24;border-radius:8px;overflow:hidden}.sq{display:flex;align-items:center;justify-content:center;aspect-ratio:1;font-size:clamp(17px,4.4vw,34px);padding:0}.light{background:#f0d9b5}.dark{background:#7e533e}.piece{width:72%;height:72%;border-radius:50%;border:3px solid #ffffff70;box-shadow:inset 0 -5px 0 #0003,0 2px 4px #0004}.red{background:#e74f57}.black{background:#202432}.selected{outline:4px solid var(--lime);outline-offset:-5px}.footer{padding:25px 0;color:var(--muted);font-size:.85rem;text-align:center}.hidden{display:none!important}.input{width:100%;padding:11px 12px;background:#0d1325;border:1px solid var(--line);border-radius:10px;color:white;margin:6px 0 12px}.field{max-width:420px}.note{font-size:.83rem;color:var(--muted)}.auth-actions{display:flex;gap:9px;flex-wrap:wrap}.auth-status{min-height:24px;color:var(--lime);margin-top:8px}
+@media(max-width:650px){.wrap{padding:16px}.hero{padding:38px 0 20px}.games{grid-template-columns:1fr}.game{min-height:240px}.nav .pill{font-size:.72rem}.section{padding:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="nav"><div class="brand">GAME<span>HUB</span> ✦</div><div class="pill">🌍 Play across devices</div></header>
+<section class="hero"><div class="eyebrow">Your next move starts here</div><h1>Good games.<br><em>Great company.</em></h1><p>Play classic board games with friends or practise offline. Works in a browser on phones, tablets, and computers.</p></section>
+<section class="games" id="home">
+ <article class="game ludo"><div class="art">🎲 🟢 🔴</div><h2>Ludo</h2><p>Roll the dice, move your tokens, and race to home. Designed for up to four players.</p><div class="actions"><button class="btn" onclick="showNotice('The playable Ludo board is the next game module to add.')">Play offline</button><button class="btn secondary" onclick="onlineInfo('Ludo')">Play online</button></div></article>
+ <article class="game"><div class="art">🔴 ⚫ 🔴</div><h2>Checkers</h2><p>Plan your moves, jump over opponents, and crown your kings.</p><div class="actions"><button class="btn" onclick="startCheckers()">Play offline</button><button class="btn secondary" onclick="onlineInfo('Checkers')">Play online</button></div></article>
+</section>
+<section class="section"><h3>Choose how to play</h3><div class="mode-row"><button class="btn secondary" onclick="showNotice('Offline mode: Checkers is playable locally on this device. Ludo will be added next.')">📴 Offline play</button><button class="btn secondary" onclick="onlineInfo('matchmaking')">🌐 Find players</button><button class="btn secondary" onclick="onlineInfo('private rooms')">🔗 Play with friends</button></div><div class="status" id="status" role="status">Welcome! Create an account or sign in to get started.</div></section>
+<section class="section board-wrap" id="checkersPanel"><div class="board-top"><div><h3>Checkers · Offline</h3><div class="small" id="turnText">Red's turn. Select a piece, then a destination.</div></div><button class="btn secondary" onclick="resetCheckers()">Restart</button></div><div id="board" class="board" aria-label="Checkers board"></div><div class="small">Local two-player mode: pass the device after each turn. This starter uses basic diagonal moves and captures; kinging and mandatory-capture rules are not implemented yet.</div></section>
+<section class="section" id="account">
+<h3>Player account</h3>
+<p class="small">Create an account with your email and password, or sign in to an existing account. Use an email address you can access. Supabase may send a confirmation email before sign-in works.</p>
+<div class="field">
+<label for="displayName" class="small">Display name (for new accounts)</label><input class="input" id="displayName" maxlength="20" autocomplete="nickname" placeholder="e.g. AccraPlayer">
+<label for="email" class="small">Email address</label><input class="input" id="email" type="email" autocomplete="email" placeholder="you@example.com">
+<label for="password" class="small">Password</label><input class="input" id="password" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters">
+<div class="auth-actions"><button class="btn" id="signupBtn" onclick="signUp()">Create account</button><button class="btn secondary" id="loginBtn" onclick="signIn()">Sign in</button><button class="btn secondary hidden" id="logoutBtn" onclick="signOut()">Sign out</button></div>
+<div class="auth-status" id="authStatus" role="status">Not signed in.</div>
+</div>
+<p class="note">Your password is sent directly to Supabase Authentication over HTTPS; this website does not send it to a Telegram bot. Never share your password with anyone.</p>
+</section>
+<footer class="footer">GAMEHUB · Ludo & Checkers · Built for web, mobile and desktop</footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://noywkfdslsnlvxtjmbmh.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_2Lv-n70lqcwwZHEcU1ojWQ_am1I9J_7';
+const statusEl=document.getElementById('status');
+function showNotice(t){statusEl.textContent=t}
+function onlineInfo(what){statusEl.textContent='Online '+what+' is not connected yet. Account setup is the first step; online rooms and realtime game logic will be added after this works.'}
+function setAuthMessage(t){document.getElementById('authStatus').textContent=t}
+let supabaseClient=null;
+try{
+ if(window.supabase && SUPABASE_URL.startsWith('https://') && SUPABASE_PUBLISHABLE_KEY.startsWith('sb_publishable_')){
+   supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+ }
+}catch(e){setAuthMessage('Could not start account service. Refresh the page and try again.')}
+function getAuthFields(){
+ const name=document.getElementById('displayName').value.trim();
+ const email=document.getElementById('email').value.trim();
+ const password=document.getElementById('password').value;
+ if(!email || !email.includes('@')){setAuthMessage('Enter a valid email address.');return null}
+ if(password.length<8){setAuthMessage('Use a password with at least 8 characters.');return null}
+ return {name,email,password}
+}
+async function signUp(){
+ if(!supabaseClient){setAuthMessage('Account service is not loaded. Check your internet connection and refresh.');return}
+ const f=getAuthFields();if(!f)return;
+ const name=f.name || 'Player';
+ setAuthMessage('Creating your account…');
+ const {data,error}=await supabaseClient.auth.signUp({email:f.email,password:f.password,options:{data:{display_name:name}}});
+ if(error){setAuthMessage(error.message);return}
+ if(data.session){setAuthMessage('Account created and signed in. Welcome, '+name+'!');updateAuthButtons(data.session.user)}
+ else{setAuthMessage('Sign-up request sent. Check your email for a confirmation link, then return here and sign in.')}
+}
+async function signIn(){
+ if(!supabaseClient){setAuthMessage('Account service is not loaded. Check your internet connection and refresh.');return}
+ const f=getAuthFields();if(!f)return;
+ setAuthMessage('Signing in…');
+ const {data,error}=await supabaseClient.auth.signInWithPassword({email:f.email,password:f.password});
+ if(error){setAuthMessage(error.message);return}
+ const name=data.user?.user_metadata?.display_name || 'Player';
+ setAuthMessage('Signed in successfully. Welcome, '+name+'!');
+ updateAuthButtons(data.user);
+}
+async function signOut(){
+ if(!supabaseClient)return;
+ const {error}=await supabaseClient.auth.signOut();
+ if(error){setAuthMessage(error.message);return}
+ setAuthMessage('You are signed out.');
+ updateAuthButtons(null);
+}
+function updateAuthButtons(user){
+ const loggedIn=!!user;
+ document.getElementById('signupBtn').classList.toggle('hidden',loggedIn);
+ document.getElementById('loginBtn').classList.toggle('hidden',loggedIn);
+ document.getElementById('logoutBtn').classList.toggle('hidden',!loggedIn);
+ if(loggedIn){document.getElementById('password').value='';}
+}
+if(supabaseClient){
+ supabaseClient.auth.getSession().then(({data})=>{
+  if(data.session){const n=data.session.user.user_metadata?.display_name||data.session.user.email||'Player';setAuthMessage('You are signed in as '+n+'.');updateAuthButtons(data.session.user)}
+ });
+ supabaseClient.auth.onAuthStateChange((_event,session)=>{if(!session)updateAuthButtons(null)});
+}
+let pieces=[],turn='r',selected=null;
+function resetCheckers(){pieces=[];for(let r=0;r<3;r++)for(let c=0;c<8;c++)if((r+c)%2)pieces.push({r,c,p:'b'});for(let r=5;r<8;r++)for(let c=0;c<8;c++)if((r+c)%2)pieces.push({r,c,p:'r'});turn='r';selected=null;drawBoard();document.getElementById('turnText').textContent="Red's turn. Select a piece, then a destination.";document.getElementById('checkersPanel').scrollIntoView({behavior:'smooth',block:'start'})}
+function startCheckers(){document.getElementById('checkersPanel').style.display='block';resetCheckers()}
+function drawBoard(){const b=document.getElementById('board');b.innerHTML='';for(let r=0;r<8;r++)for(let c=0;c<8;c++){const s=document.createElement('button');s.className='sq '+((r+c)%2?'dark':'light');s.setAttribute('aria-label',`row ${r+1} column ${c+1}`);const p=pieces.find(x=>x.r===r&&x.c===c);if(p){const d=document.createElement('span');d.className='piece '+(p.p==='r'?'red':'black');s.appendChild(d);if(selected&&selected.r===r&&selected.c===c)s.classList.add('selected')}s.onclick=()=>clickSquare(r,c);b.appendChild(s)}}
+function clickSquare(r,c){const p=pieces.find(x=>x.r===r&&x.c===c);if(selected){const from=pieces.find(x=>x.r===selected.r&&x.c===selected.c);if(!from){selected=null;drawBoard();return}const dr=r-from.r,dc=c-from.c;const target=pieces.find(x=>x.r===r&&x.c===c);if(!target&&Math.abs(dc)===1&&dr===(turn==='r'?-1:1)){from.r=r;from.c=c;turn=turn==='r'?'b':'r';selected=null;drawBoard();document.getElementById('turnText').textContent=(turn==='r'?'Red':'Black')+"'s turn. Select a piece, then a destination.";return}if(!target&&Math.abs(dc)===2&&Math.abs(dr)===2){const mid=pieces.find(x=>x.r===from.r+dr/2&&x.c===from.c+dc/2);if(mid&&mid.p!==turn&&dr===(turn==='r'?-2:2)){pieces=pieces.filter(x=>x!==mid);from.r=r;from.c=c;turn=turn==='r'?'b':'r';selected=null;drawBoard();document.getElementById('turnText').textContent=(turn==='r'?'Red':'Black')+"'s turn.";return}}}if(p&&p.p===turn){selected={r,c};drawBoard()}}
+resetCheckers();document.getElementById('checkersPanel').style.display='none';
+</script>
+</body>
+</html>
